@@ -133,6 +133,24 @@ cc_library_shared {
         "-D__ANDROID_VNDK_EXT__",
     ],
 
+    product_variables: {
+        xperience: {
+            uses_qcom_bsp_legacy: {
+                cppflags: ["-DQCOM_BSP_LEGACY"],
+            },
+        },
+    },
+
+    sanitize: {
+        misc_undefined: [
+            "signed-integer-overflow",
+            "unsigned-integer-overflow",
+        ],
+        cfi: true,
+        diag: {
+            cfi: true,
+        },
+    },
 }
 
 cc_library_shared {
