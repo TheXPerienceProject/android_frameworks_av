@@ -238,6 +238,7 @@ status_t Camera3OutputStream::returnBufferCheckedLocked(
         } else {
             ALOGW("%s: A frame is dropped for stream %d due to buffer error.", __FUNCTION__, mId);
         }
+
         res = currentConsumer->cancelBuffer(currentConsumer.get(),
                 anwBuffer,
                 anwReleaseFence);

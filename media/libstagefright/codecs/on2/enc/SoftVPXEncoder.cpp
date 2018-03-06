@@ -660,7 +660,6 @@ void SoftVPXEncoder::onQueueFilled(OMX_U32 /* portIndex */) {
             notify(OMX_EventError, error, 0, 0);
             return;
         }
-
         const uint8_t *source =
             inputBufferHeader->pBuffer + inputBufferHeader->nOffset;
 
