@@ -1448,10 +1448,8 @@ void CameraService::finishConnectLocked(const sp<BasicClient>& client,
                     oomScoreOffset, systemNativeClient);
     auto evicted = mActiveClientManager.addAndEvict(clientDescriptor);
 
-    const char* packageName = toString8(client->getPackageName()).c_str();
-
-    if (strcmp(packageName, "com.android.camera") == 0
-        || strcmp(packageName, "com.google.android.GoogleCamera") == 0) {
+        if (strcmp(String8(client->getPackageName()).string(), "com.android.camera") == 0   ||
+        strcmp(String8(client->getPackageName()).string(), "com.google.android.GoogleCamera") == 0) {
         evicted.clear();
     }
 
@@ -1565,10 +1563,8 @@ status_t CameraService::handleEvictionsLocked(const String8& cameraId, int clien
         // Find clients that would be evicted
         auto evicted = mActiveClientManager.wouldEvict(clientDescriptor);
 
-        const char* packageNameStr = toString8(packageName).c_str();
-
-        if (strcmp(packageNameStr, "com.android.camera") == 0
-            || strcmp(packageNameStr, "com.google.android.GoogleCamera") == 0) {
+        if (strcmp(String8(packageName).string(), "com.android.camera") == 0
+            || strcmp(String8(packageName).string(), "com.google.android.GoogleCamera") == 0) {
             evicted.clear();
         }
 
