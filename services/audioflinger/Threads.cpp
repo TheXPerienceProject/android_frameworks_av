@@ -3346,6 +3346,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
 
             mActiveTracks.updatePowerState(this);
 
+            if (mMixerStatus == MIXER_IDLE && !mActiveTracks.size()) {
+                onIdleMixer();
+            }
+
             updateMetadata_l();
 
             // prevent any changes in effect chain list and in each effect chain
@@ -4196,7 +4200,7 @@ void AudioFlinger::MixerThread::threadLoop_sleepTime()
                 }
             }
         } else {
-            mSleepTimeUs = mIdleSleepTimeUs;
+            mSleepTimeUs = mIdleSleepTimeUs + mIdleTimeOffsetUs;
         }
     } else if (mBytesWritten != 0 || (mMixerStatus == MIXER_TRACKS_ENABLED)) {
         // clear out mMixerBuffer or mSinkBuffer, to ensure buffers are cleared
@@ -4210,6 +4214,7 @@ void AudioFlinger::MixerThread::threadLoop_sleepTime()
         ALOGV_IF(mBytesWritten == 0 && (mMixerStatus == MIXER_TRACKS_ENABLED),
                 "anticipated start");
     }
+    mIdleTimeOffsetUs = 0;
     // TODO add standby time extension fct of effect tail
 }
 
