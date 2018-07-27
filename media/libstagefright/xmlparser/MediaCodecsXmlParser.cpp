@@ -111,6 +111,7 @@ constexpr char const* MediaCodecsXmlParser::defaultSearchDirs[];
 constexpr char const* MediaCodecsXmlParser::defaultMainXmlName;
 constexpr char const* MediaCodecsXmlParser::defaultPerformanceXmlName;
 constexpr char const* MediaCodecsXmlParser::defaultProfilingResultsXmlPath;
+constexpr char const* vendorMediaCodecsXmlName = "media_codecs_vendor.xml";
 
 MediaCodecsXmlParser::MediaCodecsXmlParser(
         const char* const* searchDirs,
@@ -121,8 +122,35 @@ MediaCodecsXmlParser::MediaCodecsXmlParser(
     mUpdate(false),
     mCodecCounter(0) {
     std::string path;
-    if (findFileInDirs(searchDirs, mainXmlName, &path)) {
-        parseTopLevelXMLFile(path.c_str(), false);
+    char value[PROP_VALUE_MAX] = {0};
+    char platform[PROP_VALUE_MAX] = {0};
+    char file_path[PROP_VALUE_MAX] = {0};
+    bool xmlFound = false;
+    if (findFileInDirs(searchDirs, vendorMediaCodecsXmlName, &path)) {
+        xmlFound = true;
+    }
+    else if (findFileInDirs(searchDirs, mainXmlName, &path)) {
+        xmlFound = true;
+    }
+
+    if (xmlFound) {
+        if (!strncmp(path.c_str(), "/vendor/etc", strlen("/vendor/etc"))){
+            strlcpy(file_path, path.c_str(), PROP_VALUE_MAX);
+            property_get("ro.board.platform", platform, NULL);
+            if (!strcmp(platform, "sdm710") ||
+                   !strcmp(platform, "msmpeafowl")) {   //platform is SDM710
+                if (property_get("vendor.media.sdm710.version", value, "0") &&
+                    (atoi(value) == 0)) {               // version is 0
+                    strlcpy(file_path, "/vendor/etc/media_codecs_sdm710_v0.xml",
+                            PROP_VALUE_MAX);
+                    parseTopLevelXMLFile(file_path, false);
+                } else {
+                    parseTopLevelXMLFile(path.c_str(), false);
+                }
+            } else {
+                parseTopLevelXMLFile(path.c_str(), false);
+            }
+        }
     } else {
         ALOGE("Cannot find %s", mainXmlName);
         mParsingStatus = NAME_NOT_FOUND;
