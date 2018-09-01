@@ -74,6 +74,7 @@ cc_library_shared {
         "-DOSCL_EXPORT_REF=",
 
         "-Werror",
+        "-Wno-deprecated-register",
     ],
 
     //addressing b/25409744
