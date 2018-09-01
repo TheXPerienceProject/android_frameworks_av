@@ -598,19 +598,8 @@ status_t CameraProviderManager::ProviderInfo::addDevice(const std::string& name,
     }
     if (deviceInfo == nullptr) return BAD_VALUE;
     deviceInfo->mStatus = initialStatus;
-    bool isAPI1Compatible = deviceInfo->isAPI1Compatible();
 
     mDevices.push_back(std::move(deviceInfo));
-
-    mUniqueCameraIds.insert(id);
-    if (isAPI1Compatible) {
-        // addDevice can be called more than once for the same camera id if HAL
-        // supports openLegacy.
-        if (std::find(mUniqueAPI1CompatibleCameraIds.begin(), mUniqueAPI1CompatibleCameraIds.end(),
-                id) == mUniqueAPI1CompatibleCameraIds.end()) {
-            mUniqueAPI1CompatibleCameraIds.push_back(id);
-        }
-    }
 
     if (parsedId != nullptr) {
         *parsedId = id;
