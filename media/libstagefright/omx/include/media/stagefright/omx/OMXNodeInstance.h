@@ -152,9 +152,9 @@ private:
     KeyedVector<OMX_BUFFERHEADERTYPE *, IOMX::buffer_id> mBufferHeaderToBufferID;
 
     bool mLegacyAdaptiveExperiment;
-    IOMX::PortMode mPortMode[2];
+    IOMX::PortMode mPortMode[4];
     // metadata and secure buffer types and graphic buffer mode tracking
-    MetadataBufferType mMetadataType[2];
+    MetadataBufferType mMetadataType[4];
     enum SecureBufferType {
         kSecureBufferTypeUnknown,
         kSecureBufferTypeOpaque,
