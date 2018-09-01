@@ -999,8 +999,6 @@ protected:
 
             void     updateRoutedDeviceId_l();
 
-            void     createDummyAudioSessionForA2DP();
-
     // Next 4 fields may be changed if IAudioTrack is re-created, but always != 0
     sp<IAudioTrack>         mAudioTrack;
     sp<IMemory>             mCblkMemory;
@@ -1176,8 +1174,6 @@ protected:
                                               // activity and connected devices.
 
     sp<media::VolumeHandler>       mVolumeHandler;
-
-    int64_t                mPauseTimeRealUs;
 
 private:
     class DeathNotifier : public IBinder::DeathRecipient {
