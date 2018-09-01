@@ -302,9 +302,7 @@ status_t NuPlayer::GenericSource::startSources() {
     //
     // TODO: this logic may no longer be relevant after the removal of widevine
     // support
-    sp<MetaData> meta = new MetaData();
-    meta->setInt32(kKeyExtraFlags, mIsStreaming ? 0 : AVNuUtils::get()->getFlags());
-    if (mAudioTrack.mSource != NULL && mAudioTrack.mSource->start(meta.get()) != OK) {
+    if (mAudioTrack.mSource != NULL && mAudioTrack.mSource->start() != OK) {
         ALOGE("failed to start audio track!");
         return UNKNOWN_ERROR;
     }
