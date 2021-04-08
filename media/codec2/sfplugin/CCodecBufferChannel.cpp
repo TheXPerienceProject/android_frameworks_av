@@ -1272,9 +1272,9 @@ void CCodecBufferChannel::feedInputBufferIfAvailableInternal() {
         return;
     }
     size_t numActiveSlots = 0;
-// QTI_BEGIN: 2024-11-14: Video: sfplugin: Reset fixes of Pipeline watcher and CCodecBufferChannel
-    while (!mPipelineWatcher.lock()->pipelineFull()) {
-// QTI_END: 2024-11-14: Video: sfplugin: Reset fixes of Pipeline watcher and CCodecBufferChannel
+    size_t pipelineRoom = 0;
+    size_t numInputBuffersAvailable = 0;
+    while (!mPipelineWatcher.lock()->pipelineFull(&pipelineRoom)) {
         sp<MediaCodecBuffer> inBuffer;
         size_t index;
         {
@@ -1305,6 +1305,11 @@ void CCodecBufferChannel::feedInputBufferIfAvailableInternal() {
 // QTI_END: 2021-03-29: Video: [WA] Codec2: queue a empty work to HAL to wake up allocation thread
         ALOGV("[%s] new input index = %zu [%p]", mName, index, inBuffer.get());
         mCallback->onInputBufferAvailable(index, inBuffer);
+        if (++numInputBuffersAvailable >= pipelineRoom) {
+            ALOGV("[%s] pipeline will overflow after %zu queueInputBuffer", mName,
+                    numInputBuffersAvailable);
+            break;
+        }
     }
     ALOGV("[%s] # active slots after feedInputBufferIfAvailable = %zu", mName, numActiveSlots);
 }
