@@ -5,7 +5,14 @@ cc_library_shared {
         "libcodec2_soft_sanitize_all-defaults",
     ],
 
+    // Device does not boot when global ThinLTO is enabled for linkerconfig.
+    // http://b/170573443
+    lto: {
+        never: true,
+    },
+
     srcs: ["C2SoftVorbisDec.cpp"],
 
     static_libs: ["libvorbisidec"],
+
 }
