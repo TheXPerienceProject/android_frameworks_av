@@ -1076,6 +1076,9 @@ private:
 
     // Bluetooth Variable latency control logic is enabled or disabled
     std::atomic_bool mBluetoothLatencyModesEnabled;
+
+//dolby
+#include "EffectDapController.h"
 };
 
 #undef INCLUDING_FROM_AUDIOFLINGER_H
