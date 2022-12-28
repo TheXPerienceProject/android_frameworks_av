@@ -1029,6 +1029,9 @@ private:
              std::vector<media::audio::common::AudioMMapPolicyInfo>> mPolicyInfos;
     int32_t mAAudioBurstsPerBuffer = 0;
     int32_t mAAudioHwBurstMinMicros = 0;
+
+//dolby
+#include "EffectDapController.h"
 };
 
 #undef INCLUDING_FROM_AUDIOFLINGER_H
