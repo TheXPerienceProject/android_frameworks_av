@@ -576,7 +576,6 @@ void AudioEffect::binderDied()
     if (cb != nullptr) {
         cb->onError(mStatus);
     }
-    mIEffect.clear();
 }
 
 // -------------------------------------------------------------------------
