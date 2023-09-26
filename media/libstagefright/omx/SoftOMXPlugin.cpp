@@ -67,7 +67,6 @@ static const kComponent kComponents[] = {
     { "OMX.dolby.ac3.decoder", "ddpdec", "audio_decoder.ac3" },
     { "OMX.dolby.eac3-joc.decoder", "ddpdec", "audio_decoder.eac3_joc" },
     { "OMX.dolby.eac3.decoder", "ddpdec", "audio_decoder.eac3" },
-    { "OMX.dolby.ac4.decoder", "ac4dec", "audio_decoder.ac4" },
 // QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
 };
 
