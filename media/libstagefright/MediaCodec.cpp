@@ -93,7 +93,6 @@ using aidl::android::media::BnResourceManagerClient;
 using aidl::android::media::IResourceManagerClient;
 using aidl::android::media::IResourceManagerService;
 using aidl::android::media::ClientInfoParcel;
-using server_configurable_flags::GetServerConfigurableFlag;
 using FreezeEvent = VideoRenderQualityTracker::FreezeEvent;
 using JudderEvent = VideoRenderQualityTracker::JudderEvent;
 
@@ -282,11 +281,6 @@ static int64_t getId(const std::shared_ptr<IResourceManagerClient> &client) {
 
 static bool isResourceError(status_t err) {
     return (err == NO_MEMORY);
-}
-
-static bool areRenderMetricsEnabled() {
-    std::string v = GetServerConfigurableFlag("media_native", "render_metrics_enabled", "false");
-    return v == "true";
 }
 
 static const int kMaxRetry = 2;
@@ -1044,10 +1038,9 @@ MediaCodec::MediaCodec(
       mHavePendingInputBuffers(false),
       mCpuBoostRequested(false),
       mIsSurfaceToDisplay(false),
-      mAreRenderMetricsEnabled(areRenderMetricsEnabled()),
       mVideoRenderQualityTracker(
               VideoRenderQualityTracker::Configuration::getFromServerConfigurableFlags(
-                      GetServerConfigurableFlag)),
+                      server_configurable_flags::GetServerConfigurableFlag)),
       mLatencyUnknown(0),
       mBytesEncoded(0),
       mEarliestEncodedPtsUs(INT64_MAX),
@@ -6086,7 +6079,7 @@ status_t MediaCodec::onReleaseOutputBuffer(const sp<AMessage> &msg) {
 
         // If rendering to the screen, then schedule a time in the future to poll to see if this
         // frame was ever rendered to seed onFrameRendered callbacks.
-        if (mAreRenderMetricsEnabled && mIsSurfaceToDisplay) {
+        if (mIsSurfaceToDisplay) {
             if (mediaTimeUs != INT64_MIN) {
                 noRenderTime ? mVideoRenderQualityTracker.onFrameReleased(mediaTimeUs)
                              : mVideoRenderQualityTracker.onFrameReleased(mediaTimeUs,

@@ -574,7 +574,6 @@ private:
     sp<ALooper> mCryptoLooper;
 
     bool mIsSurfaceToDisplay;
-    bool mAreRenderMetricsEnabled;
     PlaybackDurationAccumulator mPlaybackDurationAccumulator;
     VideoRenderQualityTracker mVideoRenderQualityTracker;
 

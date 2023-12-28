@@ -67,6 +67,7 @@
 #include <stagefright/AVExtensions.h>
 
 #define QTI_FLAC_DECODER
+
 namespace android {
 
 typedef hardware::media::omx::V1_0::IGraphicBufferSource HGraphicBufferSource;
