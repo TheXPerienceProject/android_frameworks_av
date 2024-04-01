@@ -466,7 +466,7 @@ binder::Status createSurfaceFromGbp(
         int timestampBase,
         int mirrorMode,
         int32_t colorSpace,
-        bool is	PrivilegedClient) {
+        bool is	PriviledgedClient) {
     // bufferProducer must be non-null
     if (gbp == nullptr) {
         String8 msg = String8::format("Camera %s: Surface is NULL", logicalCameraId.string());
@@ -855,7 +855,7 @@ convertToHALStreamCombination(
                     timestampBase,
                     mirrorMode,
                     colorSpace,
-                    isPrivilegedClient);
+                    isPriviledgedClient);
 
             if (!res.isOk())
                 return res;
