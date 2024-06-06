@@ -7088,7 +7088,6 @@ void AudioFlinger::DirectOutputThread::flushHw_l()
 {
     PlaybackThread::flushHw_l();
     mOutput->flush();
-    mHwPaused = false;
     mFlushPending = false;
     mFramesWritten = 0;
     mFramesWrittenAtStandby = 0;
@@ -7096,6 +7095,10 @@ void AudioFlinger::DirectOutputThread::flushHw_l()
     mTimestampVerifier.discontinuity(discontinuityForStandbyOrFlush());
     mTimestamp.clear();
     mMonotonicFrameCounter.onFlush();
+    // We do not reset mHwPaused which is hidden from the Track client.
+    // Note: the client track in Tracks.cpp and AudioTrack.cpp
+    // has a FLUSHED state but the DirectOutputThread does not;
+    // those tracks will continue to show isStopped().
 }
 
 status_t AudioFlinger::DirectOutputThread::getTimestamp_l(AudioTimestamp& timestamp)
