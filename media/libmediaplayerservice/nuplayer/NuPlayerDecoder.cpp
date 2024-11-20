@@ -374,9 +374,6 @@ void NuPlayer::Decoder::onConfigure(const sp<AMessage> &format) {
     }
     rememberCodecSpecificData(format);
 
-    // Do not assume mCodec is in configured state. There are some race conditions which will
-    // move mCodec to error state after configure() has returned success.
-    // As a temporary fix, handle the error case cleanly, without assert check.
     err = mCodec->getOutputFormat(&mOutputFormat);
     if (err == OK) {
         err = mCodec->getInputFormat(&mInputFormat);
