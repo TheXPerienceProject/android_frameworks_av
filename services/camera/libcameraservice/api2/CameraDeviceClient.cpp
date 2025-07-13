@@ -23,8 +23,6 @@
 #endif
 //#define LOG_NDEBUG 0
 
-#include <android-base/properties.h>
-#include <android-base/strings.h>
 #include <camera/CameraUtils.h>
 #include <camera/StringUtils.h>
 #include <camera/camera2/CaptureRequest.h>
@@ -99,21 +97,9 @@ CameraDeviceClient::CameraDeviceClient(
       mStreamingRequestId(REQUEST_ID_NONE),
       mStreamingRequestLastFrameNumber(NO_IN_FLIGHT_REPEATING_FRAMES),
       mRequestIdCounter(0),
-      mPrivilegedClient(false),
       mOverrideForPerfClass(overrideForPerfClass),
       mOriginalCameraId(originalCameraId),
       mIsVendorClient(isVendorClient) {
-
-    if (getPackageName() == "com.google.android.GoogleCamera") {
-        mPrivilegedClient = true;
-    } else {
-        std::vector<std::string> privilegedClientList = android::base::Split(
-                android::base::GetProperty("persist.vendor.camera.privapp.list", ""), ",");
-        auto it = std::find(privilegedClientList.begin(), privilegedClientList.end(),
-                getPackageName());
-        mPrivilegedClient = it != privilegedClientList.end();
-    }
-
     ATRACE_CALL();
     ALOGI("CameraDeviceClient %s: Opened", cameraId.c_str());
     //KEYSTONE(I34931815600fcaaeca6399e603d5b6d5d68f995b,b/376704172)
@@ -230,7 +216,6 @@ status_t CameraDeviceClient::initializeImpl(TProviderPtr providerPtr,
             strerror(-res), res);
         return res;
     }
-    mDevice->setPrivilegedClient(mPrivilegedClient);
     return OK;
 }
 
