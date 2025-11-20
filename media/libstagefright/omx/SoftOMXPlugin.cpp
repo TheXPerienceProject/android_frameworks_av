@@ -16,7 +16,9 @@
 
 //#define LOG_NDEBUG 0
 #define LOG_TAG "SoftOMXPlugin"
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
 #include <cutils/properties.h>
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 #include <utils/Log.h>
 
 #include <media/stagefright/omx/SoftOMXPlugin.h>
@@ -26,11 +28,15 @@
 #include <media/stagefright/foundation/AString.h>
 
 #include <dlfcn.h>
+// QTI_BEGIN: 2018-04-17: Audio: audio:QTI Flac decoder changes.
 #define QTI_FLAC_DECODER
+// QTI_END: 2018-04-17: Audio: audio:QTI Flac decoder changes.
 
 namespace android {
 
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
 static const kComponent kComponents[] = {
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
     { "OMX.google.aac.decoder", "aacdec", "audio_decoder.aac" },
     { "OMX.google.aac.encoder", "aacenc", "audio_encoder.aac" },
     { "OMX.google.amrnb.decoder", "amrdec", "audio_decoder.amrnb" },
@@ -65,10 +71,13 @@ static const kComponent kComponents[] = {
 };
 
 static const kComponent kVendorComponents[] = {
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 // QTI_BEGIN: 2018-02-19: Audio: frameworks/av: enable audio extended features
 #ifdef QTI_FLAC_DECODER
 // QTI_END: 2018-02-19: Audio: frameworks/av: enable audio extended features
+// QTI_BEGIN: 2018-04-17: Audio: audio:QTI Flac decoder changes.
     { "OMX.qti.audio.decoder.flac", "qtiflacdec", "audio_decoder.flac" },
+// QTI_END: 2018-04-17: Audio: audio:QTI Flac decoder changes.
 // QTI_BEGIN: 2018-02-19: Audio: frameworks/av: enable audio extended features
 #endif
 // QTI_END: 2018-02-19: Audio: frameworks/av: enable audio extended features
@@ -77,9 +86,11 @@ static const kComponent kVendorComponents[] = {
 static const size_t kNumComponents =
     sizeof(kComponents) / sizeof(kComponents[0]);
 
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
 static const size_t kNumVendorComponents =
     sizeof(kVendorComponents) / sizeof(kVendorComponents[0]);
 
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 extern "C" OMXPluginBase* createOMXPlugin() {
     ALOGI("createOMXPlugin");
     return new SoftOMXPlugin();
@@ -91,6 +102,7 @@ extern "C" void destroyOMXPlugin(OMXPluginBase* plugin) {
 }
 
 SoftOMXPlugin::SoftOMXPlugin() {
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
     auto addComponents = [&](const kComponent* components, size_t size) {
         for (size_t idx = 0; idx < size; ++idx) {
              mComponents.push_back(components[idx]);
@@ -101,6 +113,7 @@ SoftOMXPlugin::SoftOMXPlugin() {
     if (!preferC2AudioCodecs) {
         addComponents(kVendorComponents, kNumVendorComponents);
     }
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 }
 
 OMX_ERRORTYPE SoftOMXPlugin::makeComponentInstance(
@@ -110,13 +123,17 @@ OMX_ERRORTYPE SoftOMXPlugin::makeComponentInstance(
         OMX_COMPONENTTYPE **component) {
     ALOGV("makeComponentInstance '%s'", name);
 
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
     for (auto comp : mComponents) {
         if (strcmp(name, comp.mName)) {
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
             continue;
         }
 
         AString libName = "libstagefright_soft_";
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
         libName.append(comp.mLibNameSuffix);
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
         libName.append(".so");
 
         // RTLD_NODELETE means we keep the shared library around forever.
@@ -209,11 +226,15 @@ OMX_ERRORTYPE SoftOMXPlugin::enumerateComponents(
         OMX_STRING name,
         size_t /* size */,
         OMX_U32 index) {
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
     if (index >= mComponents.size()) {
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
         return OMX_ErrorNoMore;
     }
 
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
     strcpy(name, mComponents[index].mName);
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 
     return OMX_ErrorNone;
 }
@@ -221,13 +242,17 @@ OMX_ERRORTYPE SoftOMXPlugin::enumerateComponents(
 OMX_ERRORTYPE SoftOMXPlugin::getRolesOfComponent(
         const char *name,
         Vector<String8> *roles) {
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
     for (auto component : mComponents) {
         if (strcmp(name, component.mName)) {
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
             continue;
         }
 
         roles->clear();
+// QTI_BEGIN: 2021-10-04: Audio: media: Make software OMX plugins updatable
         roles->push(String8(component.mRole));
+// QTI_END: 2021-10-04: Audio: media: Make software OMX plugins updatable
 
         return OMX_ErrorNone;
     }
