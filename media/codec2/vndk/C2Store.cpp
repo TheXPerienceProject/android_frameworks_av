@@ -542,7 +542,8 @@ static C2PooledBlockPool::BufferPoolVer GetBufferPoolVer() {
 #ifdef CODEC2_LEGACY_DOLBY_IGBA
 static bool IsDolbyVisionService() {
     const char* name = getprogname();
-    return name && strcmp(name, "vendor.dolby.media.c2-service-vision") == 0;
+    return name && (strcmp(name, "vendor.dolby.media.c2-service-vision") == 0 ||
+                    strcmp(name, "dolbycodec2") == 0);
 }
 #endif
 
